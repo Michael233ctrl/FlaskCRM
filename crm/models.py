@@ -13,6 +13,11 @@ class Customer(db.Model):
     def __repr__(self):
         return f'{self.name} {self.surname}'
 
+    @property
+    def orders(self):
+        order_count = len(self.order)
+        return str(order_count)
+
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -33,4 +38,4 @@ class Order(db.Model):
     date_created = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
 
     def __repr__(self):
-        return str(self.id)
+        return str(self.product_id)
