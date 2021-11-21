@@ -24,11 +24,17 @@ def dashboard():
 
 @app.route('/customers', methods=['GET'])
 def customer_list():
-    customers = Customer.query.all()
+    customers = Customer.query.order_by('name').all()
     context = {
         'customers': customers,
         'total_customers': len(customers),
     }
     return render_template('customers.html', **context)
+
+
+@app.route('/customer/<int:id>')
+def customer_detail(id):
+    customer = Customer.query.get(id)
+    return render_template('customer_detail.html', customer=customer)
 
 

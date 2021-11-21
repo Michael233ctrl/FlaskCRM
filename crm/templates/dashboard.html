@@ -21,7 +21,12 @@
                             <td>{{ customer.email }}</td>
                             <td>{{ customer.phone }}</td>
                             <td>{{ customer.orders }}</td>
-                            <td><a href="#" class="btn btn-sm btn-info">View</a></td>
+                            <td>
+                                <a href="{{ url_for('customer_detail', id=customer.id) }}"
+                                   class="btn btn-sm btn-info">
+                                    View
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

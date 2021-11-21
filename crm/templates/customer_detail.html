@@ -1,0 +1,33 @@
+{% extends 'main.html' %}
+{% block content %}
+    <h3>{{ customer }}</h3>
+    <hr>
+    <h3>Ordered Products</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Product</th>
+            <th scope="col">Price</th>
+            <th scope="col">Date Ordered</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in customer.order %}
+            <tr>
+                <th scope="row">{{ i.id }}</th>
+                <td>{{ i.product }}</td>
+                <td>{{ i.product.price }}$</td>
+                <td>{{ i.product.date_created }}</td>
+                <td>
+                    <a href="#"
+                       class="btn btn-sm btn-info">
+                        View
+                    </a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

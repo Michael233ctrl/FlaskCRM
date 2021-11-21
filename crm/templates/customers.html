@@ -16,12 +16,17 @@
         <tbody>
         {% for customer in customers %}
             <tr>
-                <th scope="row">1</th>
-                <td>{{ customer}}</td>
+                <th scope="row">{{ customer.id }}</th>
+                <td>{{ customer }}</td>
                 <td>{{ customer.email }}</td>
                 <td>{{ customer.phone }}</td>
                 <td>{{ customer.orders }}</td>
-                <td><a href="#" class="btn btn-sm btn-info">View</a></td>
+                <td>
+                    <a href="{{ url_for('customer_detail', id=customer.id) }}"
+                       class="btn btn-sm btn-info">
+                        View
+                    </a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
