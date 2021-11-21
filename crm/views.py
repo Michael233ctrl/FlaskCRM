@@ -1,6 +1,7 @@
-from crm import app
-from flask import render_template
+from crm import app, db
+from flask import render_template, request, redirect, url_for, flash
 from .models import Customer, Product, Order
+from .forms import CustomerForm
 
 
 @app.route('/', methods=['GET'])
@@ -32,9 +33,23 @@ def customer_list():
     return render_template('customers.html', **context)
 
 
-@app.route('/customer/<int:id>')
+@app.route('/customer/<int:id>', methods=['GET', 'POST'])
 def customer_detail(id):
     customer = Customer.query.get(id)
-    return render_template('customer_detail.html', customer=customer)
+    form = CustomerForm()
+    if form.validate_on_submit():
+        """
+        Add exception handler 
+        """
+        customer.name = form.name.data
+        customer.surname = form.surname.data
+        customer.email = form.email.data
+        customer.phone = form.phone.data
+        db.session.commit()
+        return redirect(url_for('customer_detail', id=id))
 
-
+    context = {
+        'customer': customer,
+        'form': form
+    }
+    return render_template('customer_detail.html', **context)
