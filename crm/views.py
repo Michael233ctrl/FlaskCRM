@@ -4,10 +4,9 @@ from .models import Customer, Product, Order
 
 
 @app.route('/', methods=['GET'])
-def index():
-    customers = Customer.query.all()
-    orders = Order.query.all()
-
+def dashboard():
+    customers = Customer.query.all()[:5]
+    orders = Order.query.all()[:5]
     total_customers = Customer.query.count()
     total_orders = Order.query.count()
     total_products = Product.query.count()
@@ -21,3 +20,15 @@ def index():
     }
 
     return render_template('dashboard.html', **context)
+
+
+@app.route('/customers', methods=['GET'])
+def customer_list():
+    customers = Customer.query.all()
+    context = {
+        'customers': customers,
+        'total_customers': len(customers),
+    }
+    return render_template('customers.html', **context)
+
+

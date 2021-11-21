@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'main.html' %}
 
-</body>
-</html>
+{% block content %}
+    <h3>Customers: 3</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Orders</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for customer in customers %}
+            <tr>
+                <th scope="row">1</th>
+                <td>{{ customer}}</td>
+                <td>{{ customer.email }}</td>
+                <td>{{ customer.phone }}</td>
+                <td>{{ customer.orders }}</td>
+                <td><a href="#" class="btn btn-sm btn-info">View</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
