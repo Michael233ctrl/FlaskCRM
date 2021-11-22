@@ -40,9 +40,6 @@ def customer_detail(id):
     customer = Customer.query.get(id)
     form = CustomerForm()
     if form.validate_on_submit():
-        """
-        Add exception handler 
-        """
         customer.name = form.name.data
         customer.surname = form.surname.data
         customer.email = form.email.data
@@ -64,3 +61,18 @@ def delete_customer(id):
     db.session.commit()
     return jsonify('Customer was deleted')
 
+
+@app.route('/create-customer', methods=['GET', 'POST'])
+def create_customer():
+    form = CustomerForm()
+    if form.validate_on_submit():
+        customer = Customer(
+            name=form.name.data,
+            surname=form.surname.data,
+            email=form.email.data,
+            phone=form.phone.data
+        )
+        db.session.add(customer)
+        db.session.commit()
+        return redirect(url_for('customer_list'))
+    return render_template('customer_create.html', form=form)

@@ -6,7 +6,10 @@
     <div class="row">
         <div class="col-xl-4 col-lg-5">
             <div class="card card-body">
-                <a class="btn btn-primary  btn-sm btn-block" href="#" id="createBtn">Create Customer</a>
+                <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('create_customer') }}"
+                   id="createBtn">
+                    Create Customer
+                </a>
                 <table class="table table-sm">
                     <tr>
                         <th>Customer</th>
