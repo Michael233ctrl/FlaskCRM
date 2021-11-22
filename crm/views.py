@@ -7,6 +7,7 @@ from .forms import CustomerForm
 @app.route('/', methods=['GET'])
 def dashboard():
     customers = Customer.query.all()[:5]
+    products = Product.query.all()[:5]
     orders = Order.query.all()[:5]
     total_customers = Customer.query.count()
     total_orders = Order.query.count()
@@ -15,6 +16,7 @@ def dashboard():
     context = {
         'customers': customers,
         'orders': orders,
+        'products': products,
         'total_customers': total_customers,
         'total_orders': total_orders,
         'total_products': total_products,

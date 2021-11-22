@@ -4,22 +4,18 @@
     {% include '_status_rows.html' %}
     <br>
     <div class="row">
-        <div class="col-xl-12 col-lg-5">
+        <div class="col-xl-4 col-lg-5">
             <div class="card card-body">
                 <a class="btn btn-primary  btn-sm btn-block" href="#" id="createBtn">Create Customer</a>
                 <table class="table table-sm">
                     <tr>
                         <th>Customer</th>
-                        <th>Email</th>
-                        <th>Phone</th>
                         <th>Orders</th>
                         <th></th>
                     </tr>
                     {% for customer in customers %}
                         <tr>
                             <td>{{ customer }}</td>
-                            <td>{{ customer.email }}</td>
-                            <td>{{ customer.phone }}</td>
                             <td>{{ customer.orders }}</td>
                             <td>
                                 <a href="{{ url_for('customer_detail', id=customer.id) }}"
@@ -32,28 +28,7 @@
                 </table>
             </div>
         </div>
-        <div class="col-xl-12 col-lg-5">
-            <div class="card card-body">
-                <a class="btn btn-primary  btn-sm btn-block" href="#" id="createBtn">Create Product</a>
-                <table class="table table-sm">
-                    <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Date Created</th>
-                        <th></th>
-                    </tr>
-                    {% for order in orders %}
-                        <tr>
-                            <td>{{ order.product }}</td>
-                            <td>{{ order.product.price }}</td>
-                            <td>{{ order.product.date_created }}</td>
-                            <td><a class="btn btn-sm btn-info" href="#">View</a></td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-        <div class="col-xl-12 col-lg-5">
+        <div class="col-xl-8 col-lg-5">
             <div class="card card-body">
                 <a class="btn btn-primary  btn-sm btn-block" href="#" id="createBtn">Create Order</a>
                 <table class="table table-sm">
@@ -69,6 +44,28 @@
                             <td>{{ order.date_created }}</td>
                             <td><a class="btn btn-sm btn-warning" href="#">Update</a></td>
                             <td><a class="btn btn-sm btn-danger" href="#">Cancel</a></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+        <div class="col-xl-12 col-lg-5 mt-4">
+            <div class="card card-body">
+                <a class="btn btn-primary  btn-sm btn-block" href="#" id="createBtn">Create Product</a>
+                <table class="table table-sm">
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Date Created</th>
+                        <th></th>
+                    </tr>
+                    {% for product in products %}
+                        <tr>
+                            <td>{{ product }}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.date_created }}</td>
+                            <td><a class="btn btn-sm btn-info" href="#">View</a></td>
                         </tr>
                     {% endfor %}
                 </table>
