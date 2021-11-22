@@ -1,5 +1,5 @@
 from crm import app, db
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from .models import Customer, Product, Order
 from .forms import CustomerForm
 
@@ -53,3 +53,12 @@ def customer_detail(id):
         'form': form
     }
     return render_template('customer_detail.html', **context)
+
+
+@app.route('/delete-customer/<id>', methods=['DELETE'])
+def delete_customer(id):
+    customer = Customer.query.get(int(id))
+    db.session.delete(customer)
+    db.session.commit()
+    return jsonify('Customer was deleted')
+

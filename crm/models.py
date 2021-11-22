@@ -8,7 +8,7 @@ class Customer(db.Model):
     surname = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120))
     phone = db.Column(db.String(120))
-    order = db.relationship('Order', backref='customer', lazy=True)
+    order = db.relationship('Order', backref='customer', cascade="all,delete", lazy=True)
 
     def __repr__(self):
         return f'{self.name} {self.surname}'
