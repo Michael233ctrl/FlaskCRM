@@ -1,5 +1,5 @@
 from crm import app, db
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, jsonify
 from crm.models import Product
 from crm.forms.product_form import ProductForm
 
@@ -30,3 +30,11 @@ def product_detail(id):
         'form': form
     }
     return render_template('product_detail.html', **context)
+
+
+@app.route('/delete-product/<id>', methods=['DELETE'])
+def delete_product(id):
+    product = Product.query.get(int(id))
+    db.session.delete(product)
+    db.session.commit()
+    return jsonify('Customer was deleted')

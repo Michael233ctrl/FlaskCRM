@@ -1,15 +1,23 @@
-const deleteBtns = document.getElementsByClassName('delete-item')
+const deleteCustomer = document.querySelector('.delete-customer')
+const deleteProduct = document.querySelector('.delete-product')
 
-for (let i = 0; i < deleteBtns.length; i++) {
-    deleteBtns[i].addEventListener('click', function () {
+if (deleteCustomer) {
+    deleteCustomer.addEventListener('click', function () {
         const customerId = this.dataset.customer
-        deleteCustomer(customerId)
+        const url = '/delete-customer/' + customerId
+        deleteItem(url)
     })
 }
 
-function deleteCustomer(customerId) {
-    const url = '/delete-customer/' + customerId
+if (deleteProduct) {
+    deleteProduct.addEventListener('click', function () {
+        const productId = this.dataset.product
+        const url = '/delete-product/' + productId
+        deleteItem(url)
+    })
+}
 
+function deleteItem(url) {
     fetch(url, {
         method: 'DELETE',
         headers: {

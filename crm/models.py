@@ -25,7 +25,7 @@ class Product(db.Model):
     price = db.Column(db.Float)
     description = db.Column(db.Text)
     date_created = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
-    order = db.relationship('Order', backref='product', lazy=True)
+    order = db.relationship('Order', backref='product', cascade="all,delete", lazy=True)
 
     def __repr__(self):
         return self.name
