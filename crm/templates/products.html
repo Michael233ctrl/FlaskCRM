@@ -18,7 +18,7 @@
                 <th scope="row">{{ product.id }}</th>
                 <td>{{ product }}</td>
                 <td>{{ product.price }}</td>
-                <td>{{ product.date_created }}</td>
+                <td>{{ product.date_created.strftime('%Y-%m-%d') }}</td>
                 <td>
                     <a href="{{ url_for('product_detail', id=product.id) }}"
                        class="btn btn-sm btn-info">

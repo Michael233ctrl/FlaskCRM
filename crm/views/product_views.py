@@ -37,4 +37,19 @@ def delete_product(id):
     product = Product.query.get(int(id))
     db.session.delete(product)
     db.session.commit()
-    return jsonify('Customer was deleted')
+    return jsonify('Product was deleted')
+
+
+@app.route('/create-product', methods=['GET', 'POST'])
+def create_product():
+    form = ProductForm()
+    if form.validate_on_submit():
+        product = Product(
+            name=form.name.data,
+            price=form.price.data,
+            description=form.description.data,
+        )
+        db.session.add(product)
+        db.session.commit()
+        return redirect(url_for('product_list'))
+    return render_template('product_create.html', form=form)
