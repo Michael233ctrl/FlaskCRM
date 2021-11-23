@@ -13,3 +13,7 @@ def product_list():
     return render_template('products.html', **context)
 
 
+@app.route('/product/<int:id>', methods=['GET', 'POST'])
+def product_detail(id):
+    product = Product.query.get(id)
+    return render_template('product_detail.html', product=product)

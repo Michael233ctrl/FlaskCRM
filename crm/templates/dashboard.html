@@ -68,7 +68,12 @@
                             <td>{{ product }}</td>
                             <td>{{ product.price }}</td>
                             <td>{{ product.date_created }}</td>
-                            <td><a class="btn btn-sm btn-info" href="#">View</a></td>
+                            <td>
+                                <a href="{{ url_for('product_detail', id=product.id) }}"
+                                   class="btn btn-sm btn-info">
+                                    View
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

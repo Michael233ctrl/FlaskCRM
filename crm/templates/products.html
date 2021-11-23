@@ -20,7 +20,7 @@
                 <td>{{ product.price }}</td>
                 <td>{{ product.date_created }}</td>
                 <td>
-                    <a href="#"
+                    <a href="{{ url_for('product_detail', id=product.id) }}"
                        class="btn btn-sm btn-info">
                         View
                     </a>

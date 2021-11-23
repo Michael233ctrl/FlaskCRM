@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-5">
+            <h3>{{ product }}</h3>
+            <p>Price: {{ product.price }}$</p>
+            <p>Description: {{ product.description }}</p>
+            <p>Date created: {{ product.date_created.strftime('%Y-%m-%d') }}</p>
+            <p>
+                <button class="btn btn-warning" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExample"
+                        aria-expanded="false" aria-controls="collapseExample">
+                    Edit
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Delete
+                </button>
+            </p>
+        </div>
+    </div>
+{% endblock %}
