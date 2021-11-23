@@ -1,6 +1,7 @@
 from crm import app, db
-from flask import render_template
+from flask import render_template, flash, redirect, url_for
 from crm.models import Product
+from crm.forms.product_form import ProductForm
 
 
 @app.route('/products', methods=['GET'])
@@ -16,4 +17,16 @@ def product_list():
 @app.route('/product/<int:id>', methods=['GET', 'POST'])
 def product_detail(id):
     product = Product.query.get(id)
-    return render_template('product_detail.html', product=product)
+    form = ProductForm()
+    if form.validate_on_submit():
+        product.name = form.name.data
+        product.price = form.price.data
+        product.description = form.description.data
+        db.session.commit()
+        flash('Product data was successfully updated', 'success')
+        return redirect(url_for('product_detail', id=id))
+    context = {
+        'product': product,
+        'form': form
+    }
+    return render_template('product_detail.html', **context)

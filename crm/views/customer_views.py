@@ -1,7 +1,7 @@
 from crm import app, db
 from flask import render_template, redirect, url_for, flash, jsonify
 from crm.models import Customer
-from crm.forms import CustomerForm
+from crm.forms.customer_form import CustomerForm
 
 
 @app.route('/customers', methods=['GET'])
