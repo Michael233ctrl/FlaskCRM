@@ -1,12 +1,12 @@
 {% extends 'main.html' %}
 
 {% block content %}
-    <h3>Customers: 3</h3>
+    <h3>Customers: {{ total_customers }}</h3>
     <table class="table table-striped">
         <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">First</th>
+            <th scope="col">Customer</th>
             <th scope="col">Email</th>
             <th scope="col">Phone</th>
             <th scope="col">Orders</th>

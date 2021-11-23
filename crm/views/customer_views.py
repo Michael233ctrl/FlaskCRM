@@ -1,28 +1,7 @@
 from crm import app, db
-from flask import render_template, request, redirect, url_for, flash, jsonify
-from .models import Customer, Product, Order
-from .forms import CustomerForm
-
-
-@app.route('/', methods=['GET'])
-def dashboard():
-    customers = Customer.query.all()[:5]
-    products = Product.query.all()[:5]
-    orders = Order.query.all()[:5]
-    total_customers = Customer.query.count()
-    total_orders = Order.query.count()
-    total_products = Product.query.count()
-
-    context = {
-        'customers': customers,
-        'orders': orders,
-        'products': products,
-        'total_customers': total_customers,
-        'total_orders': total_orders,
-        'total_products': total_products,
-    }
-
-    return render_template('dashboard.html', **context)
+from flask import render_template, redirect, url_for, flash, jsonify
+from crm.models import Customer
+from crm.forms import CustomerForm
 
 
 @app.route('/customers', methods=['GET'])
@@ -45,6 +24,7 @@ def customer_detail(id):
         customer.email = form.email.data
         customer.phone = form.phone.data
         db.session.commit()
+        flash('User data was successfully updated', 'success')
         return redirect(url_for('customer_detail', id=id))
 
     context = {
