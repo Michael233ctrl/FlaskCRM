@@ -1,10 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'main.html' %}
 
-</body>
-</html>
+{% block content %}
+    <div class="row">
+        <h3>Orders: {{ total_orders }}</h3>
+
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Date Created</th>
+                    <th>Update</th>
+                    <th>Remove</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <th scope="row">{{ order.id }}</th>
+                        <td><a href="{{ url_for('customer_detail', id=order.customer_id) }}">{{ order.customer }}</a>
+                        </td>
+                        <td><a href="{{ url_for('product_detail', id=order.product_id) }}">{{ order.product }}</a></td>
+                        <td>{{ order.date_created.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                Update
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-danger delete-order">
+                                Cancel
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

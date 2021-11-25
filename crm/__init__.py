@@ -11,4 +11,4 @@ except DatabaseError as e:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-from crm.views import homepage_view, customer_views, product_views
+from crm.views import homepage_view, customer_views, product_views, order_views

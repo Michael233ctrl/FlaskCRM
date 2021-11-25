@@ -88,12 +88,12 @@
                 <tbody>
                 {% for i in customer.order %}
                     <tr>
-                        <th scope="row">{{ i.id }}</th>
+                        <th scope="row">{{ i }}</th>
                         <td>{{ i.product }}</td>
                         <td>{{ i.product.price }}$</td>
-                        <td>{{ i.product.date_created }}</td>
+                        <td>{{ i.product.date_created.strftime('%Y-%m-%d') }}</td>
                         <td>
-                            <a href="#"
+                            <a href="{{ url_for('product_detail', id=i.product.id) }}"
                                class="btn btn-sm btn-info">
                                 View
                             </a>
