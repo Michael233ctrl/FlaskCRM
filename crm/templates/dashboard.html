@@ -45,8 +45,18 @@
                         <tr>
                             <td>{{ order.product }}</td>
                             <td>{{ order.date_created.strftime('%Y-%m-%d') }}</td>
-                            <td><a class="btn btn-sm btn-warning" href="#">Update</a></td>
-                            <td><a class="btn btn-sm btn-danger" href="#">Cancel</a></td>
+                            <td>
+                                <a class="btn btn-sm btn-warning"
+                                   href="{{ url_for('update_order', id=order.id) }}">
+                                    Update
+                                </a>
+                            </td>
+                            <td>
+                                <a class="btn btn-sm btn-danger"
+                                   href="{{ url_for('delete_order', id=order.id) }}">
+                                    Cancel
+                                </a>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>

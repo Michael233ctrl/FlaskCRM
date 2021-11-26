@@ -26,14 +26,16 @@
                         <td><a href="{{ url_for('product_detail', id=order.product_id) }}">{{ order.product }}</a></td>
                         <td>{{ order.date_created.strftime('%Y-%m-%d') }}</td>
                         <td>
-                            <a href="{{ url_for('update_order', id=order.id) }}" class="btn btn-sm btn-warning" type="button">
+                            <a href="{{ url_for('update_order', id=order.id) }}" class="btn btn-sm btn-warning"
+                               type="button">
                                 Update
                             </a>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-sm btn-danger delete-order">
+                            <a href="{{ url_for('delete_order', id=order.id) }}" type="button"
+                               class="btn btn-sm btn-danger delete-order">
                                 Cancel
-                            </button>
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}

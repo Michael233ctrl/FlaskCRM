@@ -29,3 +29,11 @@ def update_order(id):
         'form': form
     }
     return render_template('order_form.html', **context)
+
+
+@app.route('/order/<int:id>')
+def delete_order(id):
+    order = Order.query.get(id)
+    db.session.delete(order)
+    db.session.commit()
+    return redirect(url_for('dashboard'))
