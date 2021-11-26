@@ -26,10 +26,9 @@
                         <td><a href="{{ url_for('product_detail', id=order.product_id) }}">{{ order.product }}</a></td>
                         <td>{{ order.date_created.strftime('%Y-%m-%d') }}</td>
                         <td>
-                            <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="modal"
-                                    data-bs-target="#exampleModal">
+                            <a href="{{ url_for('update_order', id=order.id) }}" class="btn btn-sm btn-warning" type="button">
                                 Update
-                            </button>
+                            </a>
                         </td>
                         <td>
                             <button type="button" class="btn btn-sm btn-danger delete-order">
