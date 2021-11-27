@@ -18,4 +18,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db, directory=MIGRATION_DIR)
 
-from crm.views import homepage_view, customer_views, product_views, order_views
+
+from crm.views.homepage_view import home
+from crm.views.customer_views import customers
+from crm.views.product_views import products
+from crm.views.order_views import orders
+
+app.register_blueprint(home)
+app.register_blueprint(customers)
+app.register_blueprint(products)
+app.register_blueprint(orders)
+
+
+def create_app():
+    pass

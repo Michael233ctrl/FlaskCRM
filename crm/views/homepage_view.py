@@ -1,9 +1,10 @@
-from crm import app
-from flask import render_template
+from flask import Blueprint, render_template
 from crm.models import Customer, Product, Order
 
+home = Blueprint('home', __name__)
 
-@app.route('/', methods=['GET'])
+
+@home.route('/', methods=['GET'])
 def dashboard():
     customers = Customer.query.all()[:5]
     products = Product.query.all()[:5]
@@ -22,4 +23,3 @@ def dashboard():
     }
 
     return render_template('dashboard.html', **context)
-

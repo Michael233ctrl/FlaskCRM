@@ -1,20 +1,22 @@
-from crm import app, db
-from flask import render_template, redirect, url_for, flash, jsonify, request
+from crm import db
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request
 from crm.models import Customer
 from crm.forms.customer_form import CustomerForm
 
+customers = Blueprint('customers', __name__)
 
-@app.route('/customers', methods=['GET'])
+
+@customers.route('/customers', methods=['GET'])
 def customer_list():
-    customers = Customer.query.order_by('name').all()
+    customer = Customer.query.order_by('name').all()
     context = {
-        'customers': customers,
-        'total_customers': len(customers),
+        'customers': customer,
+        'total_customers': len(customer),
     }
-    return render_template('customers.html', **context)
+    return render_template('customer/customers.html', **context)
 
 
-@app.route('/customer/<int:id>', methods=['GET', 'POST'])
+@customers.route('/customer/<int:id>', methods=['GET', 'POST'])
 def customer_detail(id):
     customer = Customer.query.get(id)
     form = CustomerForm(
@@ -31,17 +33,17 @@ def customer_detail(id):
             customer.phone = form.phone.data
             db.session.commit()
             flash('User data was successfully updated', 'success')
-            return redirect(url_for('customer_detail', id=id))
+            return redirect(url_for('customers.customer_detail', id=id))
         else:
             flash('Wrong entered data', 'danger')
     context = {
         'customer': customer,
         'form': form
     }
-    return render_template('customer_detail.html', **context)
+    return render_template('customer/customer_detail.html', **context)
 
 
-@app.route('/delete-customer/<id>', methods=['DELETE'])
+@customers.route('/delete-customer/<id>', methods=['DELETE'])
 def delete_customer(id):
     customer = Customer.query.get(int(id))
     db.session.delete(customer)
@@ -49,7 +51,7 @@ def delete_customer(id):
     return jsonify('Customer was deleted')
 
 
-@app.route('/create-customer', methods=['GET', 'POST'])
+@customers.route('/create-customer', methods=['GET', 'POST'])
 def create_customer():
     form = CustomerForm()
     if request.method == 'POST':
@@ -62,7 +64,8 @@ def create_customer():
             )
             db.session.add(customer)
             db.session.commit()
-            return redirect(url_for('customer_list'))
+            flash('Customer was successfully created', 'success')
+            return redirect(url_for('customers.customer_list'))
         else:
             flash('Wrong entered data', 'danger')
-    return render_template('customer_create.html', form=form)
+    return render_template('customer/customer_create.html', form=form)

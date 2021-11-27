@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-xl-4 col-lg-5">
             <div class="card card-body">
-                <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('create_customer') }}"
+                <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('customers.create_customer') }}"
                    id="createBtn">
                     Create Customer
                 </a>
@@ -21,7 +21,7 @@
                             <td>{{ customer }}</td>
                             <td>{{ customer.orders }}</td>
                             <td>
-                                <a href="{{ url_for('customer_detail', id=customer.id) }}"
+                                <a href="{{ url_for('customers.customer_detail', id=customer.id) }}"
                                    class="btn btn-sm btn-info">
                                     View
                                 </a>
@@ -33,7 +33,10 @@
         </div>
         <div class="col-xl-8 col-lg-5">
             <div class="card card-body">
-                <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('create_order') }}" id="createBtn">Create Order</a>
+                <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('orders.create_order') }}"
+                   id="createBtn">
+                    Create Order
+                </a>
                 <table class="table table-sm">
                     <tr>
                         <th>Product</th>
@@ -47,13 +50,13 @@
                             <td>{{ order.date_created.strftime('%Y-%m-%d') }}</td>
                             <td>
                                 <a class="btn btn-sm btn-warning"
-                                   href="{{ url_for('update_order', id=order.id) }}">
+                                   href="{{ url_for('orders.update_order', id=order.id) }}">
                                     Update
                                 </a>
                             </td>
                             <td>
                                 <a class="btn btn-sm btn-danger"
-                                   href="{{ url_for('delete_order', id=order.id) }}">
+                                   href="{{ url_for('orders.delete_order', id=order.id) }}">
                                     Cancel
                                 </a>
                             </td>
@@ -65,8 +68,10 @@
 
         <div class="col-xl-12 col-lg-5 mt-4">
             <div class="card card-body">
-                <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('create_product') }}" id="createBtn">Create
-                    Product</a>
+                <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('products.create_product') }}"
+                   id="createBtn">
+                    Create Product
+                </a>
                 <table class="table table-sm">
                     <tr>
                         <th>Product</th>
@@ -80,7 +85,7 @@
                             <td>{{ product.price }}</td>
                             <td>{{ product.date_created.strftime('%Y-%m-%d') }}</td>
                             <td>
-                                <a href="{{ url_for('product_detail', id=product.id) }}"
+                                <a href="{{ url_for('products.product_detail', id=product.id) }}"
                                    class="btn btn-sm btn-info">
                                     View
                                 </a>
