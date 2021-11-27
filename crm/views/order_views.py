@@ -1,6 +1,6 @@
 from crm import app, db
-from flask import render_template, flash, redirect, url_for, jsonify, request
-from crm.models import Order, Customer, Product
+from flask import render_template, flash, redirect, url_for, request
+from crm.models import Order
 from crm.forms.order_form import OrderForm
 
 
