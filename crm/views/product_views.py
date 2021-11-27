@@ -1,5 +1,5 @@
 from crm import app, db
-from flask import render_template, flash, redirect, url_for, jsonify
+from flask import render_template, flash, redirect, url_for, jsonify, request
 from crm.models import Product
 from crm.forms.product_form import ProductForm
 
@@ -17,14 +17,17 @@ def product_list():
 @app.route('/product/<int:id>', methods=['GET', 'POST'])
 def product_detail(id):
     product = Product.query.get(id)
-    form = ProductForm()
-    if form.validate_on_submit():
-        product.name = form.name.data
-        product.price = form.price.data
-        product.description = form.description.data
-        db.session.commit()
-        flash('Product data was successfully updated', 'success')
-        return redirect(url_for('product_detail', id=id))
+    form = ProductForm(name=product, price=product.price, description=product.description)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            product.name = form.name.data
+            product.price = form.price.data
+            product.description = form.description.data
+            db.session.commit()
+            flash('Product data was successfully updated', 'success')
+            return redirect(url_for('product_detail', id=id))
+        else:
+            flash('Wrong entered data', 'danger')
     context = {
         'product': product,
         'form': form
@@ -43,13 +46,16 @@ def delete_product(id):
 @app.route('/create-product', methods=['GET', 'POST'])
 def create_product():
     form = ProductForm()
-    if form.validate_on_submit():
-        product = Product(
-            name=form.name.data,
-            price=form.price.data,
-            description=form.description.data,
-        )
-        db.session.add(product)
-        db.session.commit()
-        return redirect(url_for('product_list'))
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            product = Product(
+                name=form.name.data,
+                price=form.price.data,
+                description=form.description.data,
+            )
+            db.session.add(product)
+            db.session.commit()
+            return redirect(url_for('product_list'))
+        else:
+            flash('Wrong entered data', 'danger')
     return render_template('product_create.html', form=form)

@@ -19,15 +19,7 @@
             </p>
         </div>
         <div class="col-md-6">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            {% include 'inc/_messages.html' %}
             <div class="collapse" id="collapseExample">
                 <div class="card card-body">
                     <form method="POST" action="">
