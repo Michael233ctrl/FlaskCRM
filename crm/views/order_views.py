@@ -52,13 +52,16 @@ def create_order():
     form = OrderForm()
     form.customer.choices = [(c.id, c) for c in Customer.query.all()]
     form.product.choices = [(c.id, c) for c in Product.query.all()]
-    if form.validate_on_submit():
-        order = Order(
-            customer_id=form.customer.data,
-            product_id=form.product.data,
-        )
-        db.session.add(order)
-        db.session.commit()
-        flash('Order was successfully created', 'success')
-        return redirect(url_for('orders.order_list'))
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            order = Order(
+                customer_id=form.customer.data,
+                product_id=form.product.data,
+            )
+            db.session.add(order)
+            db.session.commit()
+            flash('Order was successfully created', 'success')
+            return redirect(url_for('orders.order_list'))
+        else:
+            flash('Wrong entered data', 'danger')
     return render_template('order/order_form.html', form=form)

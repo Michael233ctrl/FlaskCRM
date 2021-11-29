@@ -10,6 +10,12 @@ class Customer(db.Model):
     phone = db.Column(db.String(120))
     order = db.relationship('Order', backref='customer', cascade="all,delete", lazy=True)
 
+    def __init__(self, name, surname, email, phone):
+        self.name = name
+        self.surname = surname
+        self.email = email
+        self.phone = phone
+
     def __repr__(self):
         return f'{self.name} {self.surname}'
 
@@ -17,6 +23,11 @@ class Customer(db.Model):
     def orders(self):
         order_count = len(self.order)
         return str(order_count)
+
+    def update(self, **kwargs):
+        for key, value in kwargs.items():
+            if hasattr(self, key):
+                setattr(self, key, value)
 
 
 class Product(db.Model):

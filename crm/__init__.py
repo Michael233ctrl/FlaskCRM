@@ -4,10 +4,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from psycopg2 import DatabaseError
+from flask_restful import Api
+
 
 MIGRATION_DIR = os.path.join('crm', 'migrations')
 
 app = Flask(__name__)
+api = Api(app)
 app.config['SECRET_KEY'] = '0994e426533435a7a1c8c13de3414af4'
 try:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/crm'
@@ -28,6 +31,12 @@ app.register_blueprint(home)
 app.register_blueprint(customers)
 app.register_blueprint(products)
 app.register_blueprint(orders)
+
+
+from crm.rest.customer_api import CustomerListApi, CustomerApi
+
+api.add_resource(CustomerListApi, '/api/customers')
+api.add_resource(CustomerApi, '/api/customers/<int:id>')
 
 
 def create_app():
