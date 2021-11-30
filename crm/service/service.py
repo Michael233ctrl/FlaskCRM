@@ -19,7 +19,9 @@ def create(model, **kwargs):
 def update(model, id, **kwargs):
     item = select_by_id(model, id)
     if item:
-        item.update(**kwargs)
+        for key, value in kwargs.items():
+            if hasattr(item, key):
+                setattr(item, key, value)
         db.session.commit()
         return item
     return False

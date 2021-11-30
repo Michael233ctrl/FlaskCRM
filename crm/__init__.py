@@ -32,12 +32,16 @@ app.register_blueprint(orders)
 
 from crm.rest.customer_api import CustomerListApi, CustomerApi
 from crm.rest.product_api import ProductListApi, ProductApi
+from crm.rest.order_api import OrderListApi, OrderApi
 
 api.add_resource(CustomerListApi, '/api/customers', strict_slashes=False)
 api.add_resource(CustomerApi, '/api/customers/<int:id>', strict_slashes=False)
 
 api.add_resource(ProductListApi, '/api/products', strict_slashes=False)
 api.add_resource(ProductApi, '/api/products/<int:id>', strict_slashes=False)
+
+api.add_resource(OrderListApi, '/api/orders', strict_slashes=False)
+api.add_resource(OrderApi, '/api/orders/<int:id>', strict_slashes=False)
 
 
 def create_app():

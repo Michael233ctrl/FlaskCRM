@@ -24,11 +24,6 @@ class Customer(db.Model):
         order_count = len(self.order)
         return str(order_count)
 
-    def update(self, **kwargs):
-        for key, value in kwargs.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
-
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,11 +40,6 @@ class Product(db.Model):
 
     def __repr__(self):
         return self.name
-
-    def update(self, **kwargs):
-        for key, value in kwargs.items():
-            if hasattr(self, key):
-                setattr(self, key, value)
 
 
 class Order(db.Model):
