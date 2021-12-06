@@ -1,5 +1,5 @@
 from crm import db
-from flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
 from crm.models import Order, Customer, Product
 from crm.forms.order_form import OrderForm
 
@@ -19,6 +19,9 @@ def order_list():
 @orders.route('/update-order/<int:id>', methods=['GET', 'POST'])
 def update_order(id):
     order = Order.query.get(id)
+    if not order:
+        abort(404)
+
     form = OrderForm(customer=order.customer_id, product=order.product_id)
     form.customer.choices = [(c.id, c) for c in Customer.query.all()]
     form.product.choices = [(c.id, c) for c in Product.query.all()]

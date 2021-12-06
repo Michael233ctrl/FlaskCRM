@@ -34,9 +34,3 @@ def delete(model, id):
         db.session.commit()
         return item
     return False
-
-
-
-
-
-

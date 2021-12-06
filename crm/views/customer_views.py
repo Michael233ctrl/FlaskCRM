@@ -1,5 +1,5 @@
 from crm import db
-from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request
+from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request, abort
 from crm.models import Customer
 from crm.forms.customer_form import CustomerForm
 
@@ -16,9 +16,12 @@ def customer_list():
     return render_template('customer/customers.html', **context)
 
 
-@customers.route('/customer/<int:id>', methods=['GET', 'POST'])
+@customers.route('/customers/<int:id>', methods=['GET', 'POST'])
 def customer_detail(id):
     customer = Customer.query.get(id)
+    if not customer:
+        abort(404)
+
     form = CustomerForm(
         name=customer.name,
         surname=customer.surname,
