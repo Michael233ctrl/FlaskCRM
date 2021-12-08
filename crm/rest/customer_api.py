@@ -1,4 +1,4 @@
-from crm.rest import BaseListApi, BaseApi
+from crm.rest.base_api import BaseListApi, BaseApi
 from crm.schemas.customer import CustomerSchema
 from crm.models import Customer
 

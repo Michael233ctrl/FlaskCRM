@@ -13,6 +13,9 @@ class TestCaseBase(unittest.TestCase):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'
         self.client = app.test_client()
         models.db.create_all()
+        self.create_test_customer()
+        self.create_test_product()
+        self.create_test_order()
 
     def tearDown(self) -> None:
         models.db.session.remove()
@@ -37,15 +40,9 @@ class TestCaseBase(unittest.TestCase):
         models.db.session.commit()
 
     def create_test_order(self):
-        self.create_test_customer()
-        self.create_test_product()
-
         order_1 = Order(customer_id=Customer.query.get(1).id, product_id=Product.query.get(1).id)
         order_2 = Order(customer_id=Customer.query.get(2).id, product_id=Product.query.get(2).id)
 
         models.db.session.add(order_1)
         models.db.session.add(order_2)
         models.db.session.commit()
-
-    def send_post_request(self, url, **kwargs):
-        return self.client.post(url, data=kwargs, follow_redirects=True)

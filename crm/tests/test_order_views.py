@@ -10,12 +10,10 @@ from crm.tests.test_case_base import TestCaseBase
 class TestOrderViews(TestCaseBase):
 
     def test_orders(self):
-        self.create_test_order()
         response = self.client.get('/orders')
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
 
     def test_update_order(self):
-        self.create_test_order()
         response = self.client.get('/update-order/1')
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
         response = self.client.get('/update-order/2')
@@ -29,18 +27,16 @@ class TestOrderViews(TestCaseBase):
         order = Order.query.get(1)
         self.assertEqual(order.customer_id, order.product_id)
         data = dict(customer_id=1, product_id=2)
-        response = self.send_post_request('/update-order/1', **data)
+        response = self.client.post('/update-order/1', data=data, follow_redirects=True)
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
 
     def test_delete_order(self):
-        self.create_test_order()
         self.assertEqual(db.session.query(Order.id).count(), 2)
         response = self.client.get('/delete-order/1', follow_redirects=True)
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
         self.assertEqual(db.session.query(Order.id).count(), 1)
 
     def test_create_product(self):
-        self.create_test_order()
         data = dict(customer=2, product=1)
-        response = self.send_post_request('/create-order', **data)
+        response = self.client.post('/create-order', data=data, follow_redirects=True)
         self.assertEqual(response.status_code, http.HTTPStatus.OK)

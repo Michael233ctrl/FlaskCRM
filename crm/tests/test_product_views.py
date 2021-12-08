@@ -10,12 +10,10 @@ from crm.tests.test_case_base import TestCaseBase
 class TestProductViews(TestCaseBase):
 
     def test_products(self):
-        self.create_test_product()
         response = self.client.get('/products')
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
 
     def test_detail_product(self):
-        self.create_test_product()
         response = self.client.get('/products/1')
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
         self.assertTrue(
@@ -29,27 +27,24 @@ class TestProductViews(TestCaseBase):
         self.assertEqual(response_invalid_data.status_code, http.HTTPStatus.NOT_FOUND)
 
     def test_edit_product(self):
-        self.create_test_product()
         data = dict(name='iPhone 11 Pro 256GB Memory', price=799.99,
                     description='Introducing the iPhone 11 Pro. A transformative triple-camera '
                                 'system that adds tons of capability without complexity',
                     )
-        response = self.send_post_request('/products/1', **data)
+        response = self.client.post('/products/1', data=data, follow_redirects=True)
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
         self.assertTrue(db.session.query(exists().where(Product.name == 'iPhone 11 Pro 256GB Memory')).scalar())
 
     def test_delete_product(self):
-        self.create_test_product()
         response = self.client.delete('/delete-product/1')
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
 
     def test_create_product(self):
-        self.create_test_product()
         data = dict(name='Sony Playstation 4 Pro White Version', price=399.99,
                     description='The ultimate home entertainment center starts with PlayStation. '
                                 'Whether you are into gaming, HD movies, television, music',
                     )
-        response = self.send_post_request('/create-product', **data)
+        response = self.client.post('/create-product', data=data, follow_redirects=True)
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
         self.assertTrue(
             db.session.query(exists().where(Product.name == 'Sony Playstation 4 Pro White Version')).scalar()
