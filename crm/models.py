@@ -10,6 +10,12 @@ class Customer(db.Model):
     phone = db.Column(db.String(120))
     order = db.relationship('Order', backref='customer', cascade="all,delete", lazy=True)
 
+    def __init__(self, name, surname, email, phone):
+        self.name = name
+        self.surname = surname
+        self.email = email
+        self.phone = phone
+
     def __repr__(self):
         return f'{self.name} {self.surname}'
 
@@ -26,6 +32,11 @@ class Product(db.Model):
     description = db.Column(db.Text)
     date_created = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
     order = db.relationship('Order', backref='product', cascade="all,delete", lazy=True)
+
+    def __init__(self, name, price, description):
+        self.name = name
+        self.price = price
+        self.description = description
 
     def __repr__(self):
         return self.name

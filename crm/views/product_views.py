@@ -1,5 +1,5 @@
 from crm import db
-from flask import Blueprint, render_template, flash, redirect, url_for, jsonify, request
+from flask import Blueprint, render_template, flash, redirect, url_for, jsonify, request, abort
 from crm.models import Product
 from crm.forms.product_form import ProductForm
 
@@ -17,9 +17,12 @@ def product_list():
     return render_template('product/products.html', **context)
 
 
-@products.route('/product/<int:id>', methods=['GET', 'POST'])
+@products.route('/products/<int:id>', methods=['GET', 'POST'])
 def product_detail(id):
     product = Product.query.get(id)
+    if not product:
+        abort(404)
+
     form = ProductForm(name=product, price=product.price, description=product.description)
     if request.method == 'POST':
         if form.validate_on_submit():
