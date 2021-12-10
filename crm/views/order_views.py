@@ -1,4 +1,4 @@
-from crm import db
+from crm import db, app
 from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
 from crm.models import Order, Customer, Product
 from crm.forms.order_form import OrderForm
@@ -20,6 +20,7 @@ def order_list():
 def update_order(id):
     order = Order.query.get(id)
     if not order:
+        app.logger.info(f"User entered wrong url")
         abort(404)
 
     form = OrderForm(customer=order.customer_id, product=order.product_id)

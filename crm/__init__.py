@@ -1,4 +1,5 @@
 import os
+import logging
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -20,15 +21,25 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db, directory=MIGRATION_DIR)
 
+formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
+
+file_handler = logging.FileHandler(filename='app.log', mode='w')
+file_handler.setFormatter(formatter)
+file_handler.setLevel(logging.DEBUG)
+
+app.logger.addHandler(file_handler)
+
 from crm.views.homepage_view import home
 from crm.views.customer_views import customers
 from crm.views.product_views import products
 from crm.views.order_views import orders
+from crm.views.handling_error_views import bp
 
 app.register_blueprint(home)
 app.register_blueprint(customers)
 app.register_blueprint(products)
 app.register_blueprint(orders)
+app.register_blueprint(bp)
 
 from crm.rest.customer_api import CustomerListApi, CustomerApi
 from crm.rest.product_api import ProductListApi, ProductApi

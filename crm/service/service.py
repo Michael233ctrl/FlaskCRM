@@ -9,20 +9,20 @@ def select_by_id(model, id):
     return db.session.query(model).get(id)
 
 
-def create(model, **kwargs):
-    for k in kwargs:
+def create(model, data):
+    for k in data:
         if not hasattr(model, k):
             raise AttributeError
-    item = model(**kwargs)
+    item = model(**data)
     db.session.add(item)
     db.session.commit()
     return item
 
 
-def update(model, id, **kwargs):
+def update(model, id, data):
     item = select_by_id(model, id)
     if item:
-        for key, value in kwargs.items():
+        for key, value in data.items():
             if not hasattr(item, key):
                 raise AttributeError
             setattr(item, key, value)

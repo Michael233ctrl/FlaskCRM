@@ -15,9 +15,8 @@ class BaseListApi(Resource):
         return self.schema.dump(select_all(self.model), many=True), 200
 
     def post(self):
-        data = request.json
         try:
-            product = create(self.model, **data)
+            product = create(self.model, request.json)
         except AttributeError:
             return {'message': "Invalid data!"}, 400
         except IntegrityError:
@@ -39,11 +38,10 @@ class BaseApi(Resource):
         return {'message': f'Item with id:{id} not found!'}, 404
 
     def put(self, id):
-        data = request.json
-        if 'id' in data:
+        if 'id' in request.json:
             return {'message': "Parameter (id) cannot be updated"}, 400
         try:
-            item = self.schema.dump(update(self.model, id, **data))
+            item = self.schema.dump(update(self.model, id, request.json))
         except AttributeError:
             return {'message': "Invalid data!"}, 400
         except ValueError:

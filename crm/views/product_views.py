@@ -1,4 +1,4 @@
-from crm import db
+from crm import db, app
 from flask import Blueprint, render_template, flash, redirect, url_for, jsonify, request, abort
 from crm.models import Product
 from crm.forms.product_form import ProductForm
@@ -21,6 +21,7 @@ def product_list():
 def product_detail(id):
     product = Product.query.get(id)
     if not product:
+        app.logger.info(f"User entered wrong url")
         abort(404)
 
     form = ProductForm(name=product, price=product.price, description=product.description)
