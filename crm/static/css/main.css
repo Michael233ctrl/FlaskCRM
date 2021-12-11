@@ -10,3 +10,7 @@ a {
 .sidenav {
     background-color: #4C71DD;
 }
+
+#search_q:hover {
+    text-decoration: underline;
+}
