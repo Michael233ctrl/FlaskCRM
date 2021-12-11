@@ -1,3 +1,7 @@
+"""
+Run application
+"""
+
 from crm import app
 
 
