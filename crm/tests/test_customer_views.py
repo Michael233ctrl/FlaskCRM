@@ -11,6 +11,7 @@ class TestCustomerViews(TestCaseBase):
 
     def test_customers(self):
         response = self.client.get('/customers')
+        print(self.app)
         self.assertEqual(response.status_code, http.HTTPStatus.OK)
 
     def test_detail_customer(self):

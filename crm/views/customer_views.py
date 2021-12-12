@@ -1,5 +1,7 @@
-from crm import db, app
+from flask import current_app as app
 from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request, abort
+
+from crm import db
 from crm.models import Customer
 from crm.forms.customer_form import CustomerForm
 

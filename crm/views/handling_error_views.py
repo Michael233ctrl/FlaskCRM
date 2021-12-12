@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from crm import app
+from flask import current_app as app
 
 bp = Blueprint('bp', __name__)
 
