@@ -1,8 +1,22 @@
+"""
+This module contains database models and defines the following classes:
+ - Customer
+ - Product
+ - Order
+"""
 from datetime import datetime
 from crm import db
 
 
 class Customer(db.Model):
+    """
+    This class defines a database table for customer
+
+    :param (str) name: customer name
+    :param (str) surname: customer surname
+    :param (str) email: customer email
+    :param (str) phone: customer phone
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120), nullable=False)
     surname = db.Column(db.String(120), nullable=False)
@@ -26,6 +40,13 @@ class Customer(db.Model):
 
 
 class Product(db.Model):
+    """
+    This class defines a database table for product
+
+    :param (str) name: customer name
+    :param (float) price: customer surname
+    :param (str) description: customer email
+    """
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), nullable=False)
     price = db.Column(db.Float)
@@ -43,6 +64,7 @@ class Product(db.Model):
 
 
 class Order(db.Model):
+    """This class defines a database table for order"""
     id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)

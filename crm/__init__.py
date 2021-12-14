@@ -1,3 +1,6 @@
+"""
+Root module that initializes web application according to the flask factory pattern
+"""
 import os
 import logging
 
@@ -14,6 +17,12 @@ migrate = Migrate()
 
 
 def create_app(testing: object = None):
+    """
+    An application factory. Function creates and configures the main flask instance.
+
+    :param testing: can be used for testing application, default None
+    :return: flask application
+    """
     app = Flask(__name__)
     app.config.from_object(Config)
 

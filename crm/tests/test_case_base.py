@@ -7,6 +7,7 @@ from crm.models import Customer, Product, Order
 
 
 class TestCaseBase(unittest.TestCase):
+
     def setUp(self) -> None:
         self.app = create_app(TestConfig)
         self.app_context = self.app.app_context()
