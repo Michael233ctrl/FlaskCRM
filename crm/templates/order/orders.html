@@ -37,13 +37,38 @@
                     </a>
                 </td>
                 <td>
-                    <a href="{{ url_for('orders.delete_order', id=order.id) }}" type="button"
-                       class="btn btn-sm btn-danger delete-order">
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal{{ order.id }}">
                         Cancel
-                    </a>
+                    </button>
                 </td>
             </tr>
+        {% endfor %}
+
+        {% for order in orders %}
+            <div class="modal fade" id="exampleModal{{ order.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title text-danger" id="exampleModalLabel">Warning</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h5>Are you sure that you want to delete order: {{ order.id }}?</h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <a href="{{ url_for('orders.delete_order', id=order.id) }}" type="button"
+                               class="btn btn-danger delete-product">
+                                Yes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
         </tbody>
     </table>
 {% endblock %}
+

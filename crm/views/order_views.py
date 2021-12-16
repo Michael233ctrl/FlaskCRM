@@ -1,5 +1,10 @@
-from crm import db
+"""
+This module contains views related to the orders blueprint
+"""
 from flask import Blueprint, render_template, flash, redirect, url_for, request, abort
+from flask import current_app as app
+
+from crm import db
 from crm.models import Order, Customer, Product
 from crm.forms.order_form import OrderForm
 
@@ -8,6 +13,11 @@ orders = Blueprint('orders', __name__)
 
 @orders.route('/orders', methods=['GET'])
 def order_list():
+    """
+    Render template with a list of all orders.
+
+    :return: rendered `orders.html` template
+    """
     order = Order.query.all()
     context = {
         'orders': order,
@@ -18,8 +28,16 @@ def order_list():
 
 @orders.route('/update-order/<int:id>', methods=['GET', 'POST'])
 def update_order(id):
+    """
+    On GET request render template with order form.
+    On POST request update order data.
+
+    :param id: order id
+    :return: rendered `order_form.html` template
+    """
     order = Order.query.get(id)
     if not order:
+        app.logger.info(f"User entered wrong url")
         abort(404)
 
     form = OrderForm(customer=order.customer_id, product=order.product_id)
@@ -43,6 +61,12 @@ def update_order(id):
 
 @orders.route('/delete-order/<int:id>')
 def delete_order(id):
+    """
+    Performs a delete request.
+
+    :param id: order id
+    :return: redirects to order_list
+    """
     order = Order.query.get(id)
     db.session.delete(order)
     db.session.commit()
@@ -52,6 +76,12 @@ def delete_order(id):
 
 @orders.route('/create-order/', methods=['GET', 'POST'])
 def create_order():
+    """
+    On GET request render template with order creation form.
+    On POST request add new order.
+
+    :return: rendered `order_form.html` template
+    """
     form = OrderForm()
     form.customer.choices = [(c.id, c) for c in Customer.query.all()]
     form.product.choices = [(c.id, c) for c in Product.query.all()]

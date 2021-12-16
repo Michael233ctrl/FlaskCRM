@@ -1,17 +1,18 @@
 import unittest
 
+from crm import create_app
 from crm import models
-from crm import app
+from crm.config import TestConfig
 from crm.models import Customer, Product, Order
 
 
 class TestCaseBase(unittest.TestCase):
+
     def setUp(self) -> None:
-        app.config['TESTING'] = True
-        app.config['DEBUG'] = False
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'
-        self.client = app.test_client()
+        self.app = create_app(TestConfig)
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        self.client = self.app.test_client()
         models.db.create_all()
         self.create_test_customer()
         self.create_test_product()
@@ -20,6 +21,7 @@ class TestCaseBase(unittest.TestCase):
     def tearDown(self) -> None:
         models.db.session.remove()
         models.db.drop_all()
+        self.app_context.pop()
 
     def create_test_customer(self):
         customer_1 = Customer(name='John', surname='Doe', email='john@email.com', phone='434-555-198')
