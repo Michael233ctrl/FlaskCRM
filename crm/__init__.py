@@ -33,13 +33,14 @@ def create_app(testing: object = None):
     db.init_app(app)
     migrate.init_app(app, db, directory=MIGRATION_DIR)
 
-    formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
+    if not testing:
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
 
-    file_handler = logging.FileHandler(filename='app.log', mode='w')
-    file_handler.setFormatter(formatter)
-    file_handler.setLevel(logging.DEBUG)
+        file_handler = logging.FileHandler(filename='app.log', mode='w')
+        file_handler.setFormatter(formatter)
+        file_handler.setLevel(logging.DEBUG)
 
-    app.logger.addHandler(file_handler)
+        app.logger.addHandler(file_handler)
 
     from crm.views.homepage_view import home
     from crm.views.customer_views import customers

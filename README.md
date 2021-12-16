@@ -1,22 +1,27 @@
 # Flask CRM
 [![Coverage Status](https://coveralls.io/repos/github/Michael233ctrl/FlaskCRM/badge.svg?branch=rebuild)](https://coveralls.io/github/Michael233ctrl/FlaskCRM?branch=rebuild)
 ___
-##Description
-####Flask CRM is a simple web application that allows you to manage your company and interact with customers.
+## Description
+
+
+#### “Flask CRM” is a web application that allows users to record information about clients, products, and orders.
 
 The current version provides you functionality like:
-- display a list of all customers, products, and orders.
-- display particular customer or product.
-- search customers and products.
-- update, create and delete customers, products, and orders.
 
-##Installation
+- Storing customers, products, and orders in a database;
+- Display the list of customers, products, and orders;
+- Updating the list of customers, products, and orders (adding, editing, removing);
+- Display number of customers, products, and orders;
+- Display information about a specific customer, product, and order;
+- Search customers and products.
 
-####Clone repository:
+## Installation
+
+#### Clone repository:
 ```
 git clone https://github.com/Michael233ctrl/FlaskCRM.git
 ```
-####Move to cloned folder:
+#### Move to cloned folder:
 ````
 cd FlaskCRM/
 ````
@@ -24,7 +29,7 @@ cd FlaskCRM/
 
 ## How to run
 
-####Set up and activate the virtual environment:
+#### Set up and activate the virtual environment:
 ````
 python3 -m venv env
 source env/bin/activate
@@ -35,7 +40,7 @@ source env/bin/activate
 pip install -r requirements.txt
 ```
 
-####Specify environment variables:
+#### Specify environment variables:
 ````
 SECRET_KEY=<your_secret_key>
 SQLALCHEMY_DATABASE_URI=<your_postgres_server>
@@ -49,7 +54,7 @@ flask db upgrade
 
 #### Populate the database with data (optionally)
 ```
-python -m crm/database/populate.py
+python -m crm.database.populate
 ```
 
 #### Run the project locally:

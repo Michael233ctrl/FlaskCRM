@@ -1,0 +1,2 @@
+recursive-include crm/templates *
+recursive-include crm/static *
