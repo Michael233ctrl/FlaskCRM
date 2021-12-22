@@ -1,71 +1,88 @@
 """
 This module contains views related to the customers blueprint
 """
-from flask import current_app as app
-from flask import Blueprint, render_template, redirect, url_for, flash, jsonify, request, abort
+# from flask import current_app as app
+from flask.views import MethodView
 
-from crm import db
+from crm import app, db
+
+from flask import jsonify, render_template, flash, redirect, request
+
 from crm.models import Customer
 from crm.forms.customer_form import CustomerForm
+# from views.base_view import BaseListView, BaseDetailView
 
-customers = Blueprint('customers', __name__)
-
-
-@customers.route('/customers', methods=['GET'])
-def customer_list():
-    """
-    Render template with a list of all customers.
-
-    :return: rendered `customers.html` template
-    """
-    customer = Customer.query.order_by('name').all()
-    context = {
-        'customers': customer,
-        'total_customers': len(customer),
-    }
-    return render_template('customer/customers.html', **context)
+from crm.service.view_service import select_all, select_by_id, create, update
 
 
-@customers.route('/customers/<int:id>', methods=['GET', 'POST'])
-def customer_detail(id):
-    """
-    On GET request render template with customer form and
-    detailed information about customer. On POST request change
-    information about customer.
+class CustomerListView(MethodView):
 
-    :param id: customer id
-    :return: rendered `customer.html` template
-    """
-    customer = Customer.query.get(id)
-    if not customer:
-        app.logger.info(f"User entered wrong url")
-        abort(404)
+    def __init__(self):
+        self.template_name = 'customer/customers.html'
+        self.context = {
+            'customers': select_all(Customer),
+            'total_customers': len(select_all(Customer))
+        }
 
-    form = CustomerForm(
-        name=customer.name,
-        surname=customer.surname,
-        email=customer.email,
-        phone=customer.phone
-    )
-    if request.method == 'POST':
+    def get(self):
+        return render_template(self.template_name, **self.context)
+
+
+class CustomerCreateView(MethodView):
+
+    def __init__(self):
+        super().__init__()
+        self.model = Customer
+        self.template_name = 'customer/customer_create.html'
+        self.context = CustomerForm()
+
+    def get(self):
+        return render_template(self.template_name, form=self.context)
+
+    def post(self):
+        form = self.context
         if form.validate_on_submit():
-            customer.name = form.name.data
-            customer.surname = form.surname.data
-            customer.email = form.email.data
-            customer.phone = form.phone.data
-            db.session.commit()
-            flash('User data was successfully updated', 'success')
-            return redirect(url_for('customers.customer_detail', id=id))
+            create(self.model, form.data)
+            flash('Customer successfully created', 'success')
+            return redirect(request.path)
         else:
             flash('Wrong entered data', 'danger')
-    context = {
-        'customer': customer,
-        'form': form
-    }
-    return render_template('customer/customer_detail.html', **context)
 
 
-@customers.route('/delete-customer/<id>', methods=['DELETE'])
+class CustomerDetailView(MethodView):
+
+    def __init__(self):
+        super().__init__()
+        self.model = Customer
+        self.template_name = 'customer/customer_detail.html'
+
+    def get(self, id):
+        return render_template(self.template_name, **self.get_context(id))
+
+    def get_context(self, id_):
+        customer = select_by_id(self.model, id_)
+        form = CustomerForm(
+            name=customer.name,
+            surname=customer.surname,
+            email=customer.email,
+            phone=customer.phone
+        )
+        return {'customer': customer, 'form': form}
+
+    def post(self, id):
+        data = self.get_context(id)
+        item = data.get('customer') or data.get('product')
+
+        form = data['form']
+        if form.validate_on_submit():
+            update(item, form.data)
+            flash(f'{item} successfully updated', 'success')
+            return redirect(request.path)
+        else:
+            flash('Wrong entered data', 'danger')
+
+
+@app.route('/delete-customer/<id>', methods=['DELETE'])
 def delete_customer(id):
     """
     Performs a delete request.
@@ -77,29 +94,3 @@ def delete_customer(id):
     db.session.delete(customer)
     db.session.commit()
     return jsonify('Customer was deleted')
-
-
-@customers.route('/create-customer', methods=['GET', 'POST'])
-def create_customer():
-    """
-    On GET request render template with customer creation form.
-    On POST request add new customer.
-
-    :return: rendered `customer_create.html` template
-    """
-    form = CustomerForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            customer = Customer(
-                name=form.name.data,
-                surname=form.surname.data,
-                email=form.email.data,
-                phone=form.phone.data
-            )
-            db.session.add(customer)
-            db.session.commit()
-            flash('Customer was successfully created', 'success')
-            return redirect(url_for('customers.customer_list'))
-        else:
-            flash('Wrong entered data', 'danger')
-    return render_template('customer/customer_create.html', form=form)

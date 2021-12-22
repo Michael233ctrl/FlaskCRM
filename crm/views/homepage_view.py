@@ -1,13 +1,14 @@
 """
 This module contains views related to the home blueprint
 """
-from flask import Blueprint, render_template, request
+from crm import app
+
+from flask import render_template, request
+
 from crm.models import Customer, Product, Order
 
-home = Blueprint('home', __name__)
 
-
-@home.route('/', methods=['GET'])
+@app.route('/', methods=['GET'])
 def dashboard():
     """
     Render template with a restricted amount of
@@ -34,7 +35,7 @@ def dashboard():
     return render_template('dashboard.html', **context)
 
 
-@home.route('/search', methods=['GET'])
+@app.route('/search', methods=['GET'])
 def search():
     """
     Performs a search by Customer, and Product models.

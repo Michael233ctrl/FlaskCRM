@@ -1,10 +1,7 @@
 """
 Run application
 """
-from crm import create_app
-
-app = create_app()
-
+from crm import app
 
 if __name__ == '__main__':
     app.run(debug=True)

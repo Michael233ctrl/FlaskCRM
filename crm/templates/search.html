@@ -5,11 +5,11 @@
     <hr>
     {% if q_customer %}
         {% for i in q_customer %}
-            <a id="search_q" href="{{ url_for('customers.customer_detail', id=i.id) }}"><h4>{{ i }}</h4></a>
+            <a id="search_q" href="{{ url_for('customer_detail', id=i.id) }}"><h4>{{ i }}</h4></a>
         {% endfor %}
     {% elif q_product %}
         {% for i in q_product %}
-            <a id="search_q" href="{{ url_for('products.product_detail', id=i.id) }}"><h4>{{ i }}</h4></a>
+            <a id="search_q" href="{{ url_for('product_detail', id=i.id) }}"><h4>{{ i }}</h4></a>
         {% endfor %}
     {% else %}
         <h3>No results!</h3>

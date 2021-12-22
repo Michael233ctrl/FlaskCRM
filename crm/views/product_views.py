@@ -1,66 +1,53 @@
 """
 This module contains views related to the products blueprint
 """
-from flask import Blueprint, render_template, flash, redirect, url_for, jsonify, request, abort
-from flask import current_app as app
+from flask import jsonify
 
-from crm import db
+from crm import db, app
 from crm.models import Product
 from crm.forms.product_form import ProductForm
+from views.base_view import BaseListView, BaseDetailView
+
+from crm.service.view_service import select_all
 
 
-products = Blueprint('products', __name__)
+class ProductListView(BaseListView):
+
+    def __init__(self):
+        super().__init__()
+        self.template_name = 'product/products.html'
+        self.model = Product
+        self.context = self.get_context()
+
+    def get_context(self):
+        product = select_all(self.model)
+        return {'products': product, 'total_products': len(product)}
 
 
-@products.route('/products', methods=['GET'])
-def product_list():
-    """
-    Render template with a list of all products.
+class ProductCreateView(BaseListView):
 
-    :return: rendered `products.html` template
-    """
-    product = Product.query.order_by('name').all()
-    context = {
-        'products': product,
-        'total_products': len(product),
-    }
-    return render_template('product/products.html', **context)
+    def __init__(self):
+        super().__init__()
+        self.model = Product
+        self.template_name = 'product/product_create.html'
+        self.context = {'form': ProductForm()}
 
 
-@products.route('/products/<int:id>', methods=['GET', 'POST'])
-def product_detail(id):
-    """
-    On GET request render template with product form and
-    detailed information about product. On POST request change
-    information about product.
+class ProductDetailView(BaseDetailView):
 
-    :param id: product id
-    :return: rendered `product_detail.html` template
-    """
-    product = Product.query.get(id)
-    if not product:
-        app.logger.info(f"User entered wrong url")
-        abort(404)
+    def __init__(self):
+        super().__init__()
+        self.template_name = 'product/product_detail.html'
 
-    form = ProductForm(name=product, price=product.price, description=product.description)
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            product.name = form.name.data
-            product.price = form.price.data
-            product.description = form.description.data
-            db.session.commit()
-            flash('Product data was successfully updated', 'success')
-            return redirect(url_for('products.product_detail', id=id))
-        else:
-            flash('Wrong entered data', 'danger')
-    context = {
-        'product': product,
-        'form': form
-    }
-    return render_template('product/product_detail.html', **context)
+    def get_context(self, id_):
+        product = Product.query.get(id_)
+        form = ProductForm(name=product, price=product.price, description=product.description)
+        return {'product': product, 'form': form}
 
 
-@products.route('/delete-product/<id>', methods=['DELETE'])
+
+
+@app.route('/delete-product/<id>', methods=['DELETE'])
 def delete_product(id):
     """
     Performs a delete request.
@@ -73,27 +60,3 @@ def delete_product(id):
     db.session.commit()
     return jsonify('Product was deleted')
 
-
-@products.route('/create-product', methods=['GET', 'POST'])
-def create_product():
-    """
-    On GET request render template with product creation form.
-    On POST request add new product.
-
-    :return: rendered `product_create.html` template
-    """
-    form = ProductForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            product = Product(
-                name=form.name.data,
-                price=form.price.data,
-                description=form.description.data,
-            )
-            db.session.add(product)
-            db.session.commit()
-            flash('Product data was successfully created', 'success')
-            return redirect(url_for('products.product_list'))
-        else:
-            flash('Wrong entered data', 'danger')
-    return render_template('product/product_create.html', form=form)

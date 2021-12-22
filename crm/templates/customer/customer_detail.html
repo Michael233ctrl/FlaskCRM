@@ -85,7 +85,7 @@
                         <td>{{ i.product.price }}$</td>
                         <td>{{ i.product.date_created.strftime('%Y-%m-%d') }}</td>
                         <td>
-                            <a href="{{ url_for('products.product_detail', id=i.product.id) }}"
+                            <a href="{{ url_for('product_detail', id=i.product.id) }}"
                                class="btn btn-sm btn-info">
                                 View
                             </a>

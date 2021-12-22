@@ -2,7 +2,6 @@
 Root module that initializes web application according to the flask factory pattern
 """
 import os
-import logging
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -12,59 +11,40 @@ from crm.config import Config
 
 MIGRATION_DIR = os.path.join('crm', 'migrations')
 
-db = SQLAlchemy()
-migrate = Migrate()
+app = Flask(__name__)
+app.config['SECRET_KEY'] = '0994e426533435a7a1c8c13de3414af4'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/crm'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db, directory=MIGRATION_DIR)
+
+from crm.views import homepage_view, product_views, order_views
+
+from crm.views.customer_views import CustomerListView, CustomerDetailView, CustomerCreateView
+from crm.views.product_views import ProductListView, ProductDetailView, ProductCreateView
+
+app.add_url_rule('/customers', view_func=CustomerListView.as_view('customer_list'))
+app.add_url_rule('/customers/<id>', view_func=CustomerDetailView.as_view('customer_detail'))
+app.add_url_rule('/create-customer', view_func=CustomerCreateView.as_view('create_customer'))
+
+app.add_url_rule('/products', view_func=ProductListView.as_view('product_list'))
+app.add_url_rule('/products/<id>', view_func=ProductDetailView.as_view('product_detail'))
+app.add_url_rule('/create-product', view_func=ProductCreateView.as_view('create_product'))
 
 
-def create_app(testing: object = None):
-    """
-    An application factory. Function creates and configures the main flask instance.
+# api = Api(app)
 
-    :param testing: can be used for testing application, default None
-    :return: flask application
-    """
-    app = Flask(__name__)
-    app.config.from_object(Config)
 
-    if testing:
-        app.config.from_object(testing)
-
-    api = Api(app)
-    db.init_app(app)
-    migrate.init_app(app, db, directory=MIGRATION_DIR)
-
-    if not testing:
-        formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
-
-        file_handler = logging.FileHandler(filename='app.log', mode='w')
-        file_handler.setFormatter(formatter)
-        file_handler.setLevel(logging.DEBUG)
-
-        app.logger.addHandler(file_handler)
-
-    from crm.views.homepage_view import home
-    from crm.views.customer_views import customers
-    from crm.views.product_views import products
-    from crm.views.order_views import orders
-    from crm.views.handling_error_views import bp
-
-    app.register_blueprint(home)
-    app.register_blueprint(customers)
-    app.register_blueprint(products)
-    app.register_blueprint(orders)
-    app.register_blueprint(bp)
-
-    from crm.rest.customer_api import CustomerListApi, CustomerApi
-    from crm.rest.product_api import ProductListApi, ProductApi
-    from crm.rest.order_api import OrderListApi, OrderApi
-
-    api.add_resource(CustomerListApi, '/api/customers', strict_slashes=False)
-    api.add_resource(CustomerApi, '/api/customers/<int:id>', strict_slashes=False)
-
-    api.add_resource(ProductListApi, '/api/products', strict_slashes=False)
-    api.add_resource(ProductApi, '/api/products/<int:id>', strict_slashes=False)
-
-    api.add_resource(OrderListApi, '/api/orders', strict_slashes=False)
-    api.add_resource(OrderApi, '/api/orders/<int:id>', strict_slashes=False)
-
-    return app
+# from crm.rest.customer_api import CustomerListApi, CustomerApi
+# from crm.rest.product_api import ProductListApi, ProductApi
+# from crm.rest.order_api import OrderListApi, OrderApi
+#
+# api.add_resource(CustomerListApi, '/api/customers', strict_slashes=False)
+# api.add_resource(CustomerApi, '/api/customers/<int:id>', strict_slashes=False)
+#
+# api.add_resource(ProductListApi, '/api/products', strict_slashes=False)
+# api.add_resource(ProductApi, '/api/products/<int:id>', strict_slashes=False)
+#
+# api.add_resource(OrderListApi, '/api/orders', strict_slashes=False)
+# api.add_resource(OrderApi, '/api/orders/<int:id>', strict_slashes=False)

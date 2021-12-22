@@ -3,7 +3,7 @@
 {% block content %}
     <h3>Customers: {{ total_customers }}</h3>
     {% include 'inc/_messages.html' %}
-    <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('customers.create_customer') }}" id="createBtn">
+    <a class="btn btn-primary  btn-sm btn-block" href="{{ url_for('create_customer') }}" id="createBtn">
         Create Customer
     </a>
     <table class="table table-striped">
@@ -26,7 +26,7 @@
                 <td>{{ customer.phone }}</td>
                 <td>{{ customer.orders }}</td>
                 <td>
-                    <a href="{{ url_for('customers.customer_detail', id=customer.id) }}"
+                    <a href="{{ url_for('customer_detail', id=customer.id) }}"
                        class="btn btn-sm btn-info">
                         View
                     </a>
