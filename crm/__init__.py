@@ -23,28 +23,34 @@ from crm.views import homepage_view, product_views, order_views
 
 from crm.views.customer_views import CustomerListView, CustomerDetailView, CustomerCreateView
 from crm.views.product_views import ProductListView, ProductDetailView, ProductCreateView
+from crm.views.order_views import OrderListView, OrderCreateView, OrderUpdateView
 
 app.add_url_rule('/customers', view_func=CustomerListView.as_view('customer_list'))
 app.add_url_rule('/customers/<id>', view_func=CustomerDetailView.as_view('customer_detail'))
 app.add_url_rule('/create-customer', view_func=CustomerCreateView.as_view('create_customer'))
+app.add_url_rule('/delete-customer/<id>', view_func=CustomerDetailView.as_view("delete_customer"), methods=['DELETE'])
+
 
 app.add_url_rule('/products', view_func=ProductListView.as_view('product_list'))
 app.add_url_rule('/products/<id>', view_func=ProductDetailView.as_view('product_detail'))
 app.add_url_rule('/create-product', view_func=ProductCreateView.as_view('create_product'))
+app.add_url_rule('/delete-product/<id>', view_func=ProductDetailView.as_view('delete_product'), methods=['DELETE'])
 
+app.add_url_rule('/orders', view_func=OrderListView.as_view('order_list'))
+app.add_url_rule('/update-order/<id>', view_func=OrderUpdateView.as_view('update_order'))
+app.add_url_rule('/create-order', view_func=OrderCreateView.as_view('create_order'))
 
-# api = Api(app)
+api = Api(app)
 
+from crm.rest.customer_api import CustomerListApi, CustomerApi
+from crm.rest.product_api import ProductListApi, ProductApi
+from crm.rest.order_api import OrderListApi, OrderApi
 
-# from crm.rest.customer_api import CustomerListApi, CustomerApi
-# from crm.rest.product_api import ProductListApi, ProductApi
-# from crm.rest.order_api import OrderListApi, OrderApi
-#
-# api.add_resource(CustomerListApi, '/api/customers', strict_slashes=False)
-# api.add_resource(CustomerApi, '/api/customers/<int:id>', strict_slashes=False)
-#
-# api.add_resource(ProductListApi, '/api/products', strict_slashes=False)
-# api.add_resource(ProductApi, '/api/products/<int:id>', strict_slashes=False)
-#
-# api.add_resource(OrderListApi, '/api/orders', strict_slashes=False)
-# api.add_resource(OrderApi, '/api/orders/<int:id>', strict_slashes=False)
+api.add_resource(CustomerListApi, '/api/customers', strict_slashes=False)
+api.add_resource(CustomerApi, '/api/customers/<int:id>', strict_slashes=False)
+
+api.add_resource(ProductListApi, '/api/products', strict_slashes=False)
+api.add_resource(ProductApi, '/api/products/<int:id>', strict_slashes=False)
+
+api.add_resource(OrderListApi, '/api/orders', strict_slashes=False)
+api.add_resource(OrderApi, '/api/orders/<int:id>', strict_slashes=False)

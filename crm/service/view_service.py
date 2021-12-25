@@ -1,51 +1,42 @@
 from crm import db
 
 
-class Service:
+class ServiceDB:
+    def __init__(self):
+        self.model = None
 
-    def select_all(self, model):
-        db.session.query(model).all()
+    def select_all(self, another_model=None):
+        if another_model is None:
+            return db.session.query(self.model).all()
+        return db.session.query(another_model).all()
 
+    def select_by_id(self, id_):
+        return db.session.query(self.model).get(id_)
 
-    def select_by_id(self, model, id):
-        return db.session.query(model).get(id)
-
-    def create(self, model, form_data):
+    def create(self, form_data):
         d = {}
         for key, value in form_data.items():
-            if hasattr(model, key):
+            if hasattr(self.model, key):
                 d[key] = value
-        item = model(**d)
-        db.session.add(item)
+        item = self.model(**d)
+        self.save(item)
+
+    def update(self, form_data):
+        for key, value in form_data.items():
+            if hasattr(self.model, key):
+                setattr(self.model, key, value)
+        self.save()
+
+    def delete_item(self, id_):
+        item = self.select_by_id(id_)
+        if item:
+            db.session.delete(item)
+            self.save()
+            return item
+        return False
+
+    @staticmethod
+    def save(item=None):
+        if item is not None:
+            db.session.add(item)
         db.session.commit()
-
-    def update(self, model, data):
-        for key, value in data.items():
-            if hasattr(model, key):
-                setattr(model, key, value)
-        db.session.commit()
-
-
-def select_all(model):
-    return db.session.query(model).all()
-
-
-def select_by_id(model, id):
-    return db.session.query(model).get(id)
-
-
-def create(model, form_data):
-    d = {}
-    for key, value in form_data.items():
-        if hasattr(model, key):
-            d[key] = value
-    item = model(**d)
-    db.session.add(item)
-    db.session.commit()
-
-
-def update(model, data):
-    for key, value in data.items():
-        if hasattr(model, key):
-            setattr(model, key, value)
-    db.session.commit()

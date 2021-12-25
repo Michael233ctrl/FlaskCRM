@@ -1,5 +1,6 @@
 const deleteCustomer = document.querySelector('.delete-customer')
 const deleteProduct = document.querySelector('.delete-product')
+const deleteOrder = document.querySelector('.delete-order')
 
 if (deleteCustomer) {
     deleteCustomer.addEventListener('click', function () {
@@ -14,6 +15,15 @@ if (deleteProduct) {
         const productId = this.dataset.product
         const url = '/delete-product/' + productId
         deleteItem(url)
+    })
+}
+
+if (deleteOrder){
+    deleteOrder.addEventListener('click', function () {
+        console.log("clicked")
+        // const orderId = this.dataset.order
+        // const url = '/api/orders/' + orderId
+        // deleteItem(url)
     })
 }
 

@@ -1,56 +1,52 @@
-from flask import render_template, flash, redirect, abort, request
+from flask import render_template, flash, redirect, request, jsonify
 from flask.views import MethodView
 
-from crm.service.view_service import update, create
+from crm.service.view_service import ServiceDB
 
 
-class BaseListView(MethodView):
+class BaseListView(ServiceDB, MethodView):
 
     def __init__(self):
+        super().__init__()
         self.template_name = None
-        self.model = None
         self.context = None
 
     def get(self):
-        return render_template(self.template_name, **self.context)
+        return render_template(self.template_name, **self.context())
 
     def post(self):
-        form = self.context['form']
+        data = self.context()
+        form = data.get('form')
 
         if form.validate_on_submit():
-            create(self.model, form.data)
-            flash('Success', 'success')
+            self.create(form.data)
+            flash('Item was successfully created', 'success')
             return redirect(request.path)
         else:
             flash('Wrong entered data', 'danger')
 
 
-class BaseDetailView(MethodView):
+class BaseDetailView(ServiceDB, MethodView):
+
     def __init__(self):
+        super().__init__()
         self.template_name = None
+        self.context = None
 
     def get(self, id):
-        return render_template(self.template_name, **self.get_context(id))
+        return render_template(self.template_name, **self.context(id))
 
     def post(self, id):
-        data = self.get_context(id)
-        item = data.get('customer') or data.get('product')
-        if item is None:
-            abort(404)
+        data = self.context(id)
+        form = data.get('form')
 
-        form = data['form']
         if form.validate_on_submit():
-            update(item, form.data)
-            flash(f'{item} successfully updated', 'success')
+            self.update(form.data)
+            flash(f'Successfully updated', 'success')
             return redirect(request.path)
         else:
             flash('Wrong entered data', 'danger')
 
-
-class BaseDeleteView(MethodView):
-    def __init__(self):
-        self.context = None
-        self.template_name = None
-
-    def delete(self):
-        pass
+    def delete(self, id):
+        item = self.delete_item(id)
+        return jsonify(f'{item} was deleted')

@@ -2,59 +2,105 @@
 This module contains views related to the orders blueprint
 """
 
-from flask import render_template, flash, redirect, url_for, request, abort
+from flask import flash, redirect, url_for
 
 from crm import db, app
 from crm.models import Order, Customer, Product
 from crm.forms.order_form import OrderForm
+from views.base_view import BaseListView, BaseDetailView
 
 
-@app.route('/orders', methods=['GET'])
-def order_list():
-    """
-    Render template with a list of all orders.
+class OrderListView(BaseListView):
 
-    :return: rendered `orders.html` template
-    """
-    order = Order.query.all()
-    context = {
-        'orders': order,
-        'total_orders': len(order),
-    }
-    return render_template('order/orders.html', **context)
+    def __init__(self):
+        super().__init__()
+        self.model = Order
+        self.template_name = 'order/orders.html'
+        self.context = self.get_context
+
+    def get_context(self):
+        orders = self.select_all()
+        return {'orders': orders, 'total_orders': len(orders)}
 
 
-@app.route('/update-order/<int:id>', methods=['GET', 'POST'])
-def update_order(id):
-    """
-    On GET request render template with order form.
-    On POST request update order data.
+class OrderCreateView(BaseListView):
 
-    :param id: order id
-    :return: rendered `order_form.html` template
-    """
-    order = Order.query.get(id)
-    if not order:
-        app.logger.info(f"User entered wrong url")
-        abort(404)
+    def __init__(self):
+        super().__init__()
+        self.model = Order
+        self.template_name = 'order/order_form.html'
+        self.context = self.get_context
 
-    form = OrderForm(customer=order.customer_id, product=order.product_id)
-    form.customer.choices = [(c.id, c) for c in Customer.query.all()]
-    form.product.choices = [(c.id, c) for c in Product.query.all()]
-    if request.method == 'POST':
+    def get_context(self):
+        form = OrderForm()
+        form.customer.choices = [(c.id, c) for c in self.select_all(Customer)]
+        form.product.choices = [(p.id, p) for p in self.select_all(Product)]
+        return {'form': form}
+
+    def post(self):
+        data = self.context()
+        form = data.get('form')
+
+        if form.validate_on_submit():
+            order = Order(
+                customer_id=form.customer.data,
+                product_id=form.product.data,
+            )
+            self.save(order)
+            flash('Order was successfully created', 'success')
+            return redirect(url_for('order_list'))
+        else:
+            flash('Wrong entered data', 'danger')
+
+
+class OrderUpdateView(BaseDetailView):
+
+    def __init__(self):
+        super().__init__()
+        self.model = Order
+        self.template_name = 'order/order_form.html'
+        self.context = self.get_context
+
+    def get_context(self, id_):
+        order = self.select_by_id(id_)
+        self.model = order
+
+        form = OrderForm(customer=order.customer_id, product=order.product_id)
+        form.customer.choices = [(c.id, c) for c in self.select_all(Customer)]
+        form.product.choices = [(p.id, p) for p in self.select_all(Product)]
+        return {'form': form, 'order': order}
+
+    def post(self, id):
+        data = self.context(id)
+        form = data.get('form')
+        order = data.get('order')
+
         if form.validate_on_submit():
             order.customer_id = form.customer.data
             order.product_id = form.product.data
-            db.session.commit()
+
+            self.save()
             flash('Order was successfully updated', 'success')
             return redirect(url_for('order_list'))
         else:
             flash('Wrong entered data', 'danger')
-    context = {
-        'action': 'update',
-        'form': form
-    }
-    return render_template('order/order_form.html', **context)
+
+
+# class OrderDeleteView(ServiceDB, MethodView):
+#
+#     def __init__(self):
+#         super().__init__()
+#         self.model = Order
+#     #     self.context = self.get_context
+#     #
+#     # def get_context(self, id_):
+#     #     order = self.select_by_id(id_)
+#     #     return order
+#
+#     def get(self, id):
+#         self.delete_item(id)
+#         flash(f'Order:{id} was successfully deleted', 'success')
+#         return redirect(url_for('order_list'))
 
 
 @app.route('/delete-order/<int:id>')
@@ -70,29 +116,3 @@ def delete_order(id):
     db.session.commit()
     flash('Order was successfully deleted', 'success')
     return redirect(url_for('order_list'))
-
-
-@app.route('/create-order/', methods=['GET', 'POST'])
-def create_order():
-    """
-    On GET request render template with order creation form.
-    On POST request add new order.
-
-    :return: rendered `order_form.html` template
-    """
-    form = OrderForm()
-    form.customer.choices = [(c.id, c) for c in Customer.query.all()]
-    form.product.choices = [(c.id, c) for c in Product.query.all()]
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            order = Order(
-                customer_id=form.customer.data,
-                product_id=form.product.data,
-            )
-            db.session.add(order)
-            db.session.commit()
-            flash('Order was successfully created', 'success')
-            return redirect(url_for('order_list'))
-        else:
-            flash('Wrong entered data', 'danger')
-    return render_template('order/order_form.html', form=form)

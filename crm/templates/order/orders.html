@@ -3,7 +3,7 @@
 {% block content %}
     {% include 'inc/_messages.html' %}
     <h3>Orders: {{ total_orders }}</h3>
-    <a class="btn btn-primary btn-sm btn-block" href="{{ url_for('orders.create_order') }}"
+    <a class="btn btn-primary btn-sm btn-block" href="{{ url_for('create_order') }}"
        id="createBtn">
         Create Order
     </a>
@@ -24,14 +24,14 @@
             <tr>
                 <th scope="row">{{ order.id }}</th>
                 <td>
-                    <a href="{{ url_for('customers.customer_detail', id=order.customer_id) }}">{{ order.customer }}</a>
+                    <a href="{{ url_for('customer_detail', id=order.customer_id) }}">{{ order.customer }}</a>
                 </td>
                 <td>
-                    <a href="{{ url_for('products.product_detail', id=order.product_id) }}">{{ order.product }}</a>
+                    <a href="{{ url_for('product_detail', id=order.product_id) }}">{{ order.product }}</a>
                 </td>
                 <td>{{ order.date_created.strftime('%Y-%m-%d') }}</td>
                 <td>
-                    <a href="{{ url_for('orders.update_order', id=order.id) }}" class="btn btn-sm btn-warning"
+                    <a href="{{ url_for('update_order', id=order.id) }}" class="btn btn-sm btn-warning"
                        type="button">
                         Update
                     </a>
@@ -59,8 +59,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                            <a href="{{ url_for('orders.delete_order', id=order.id) }}" type="button"
-                               class="btn btn-danger delete-product">
+                            <a href="{{ url_for('delete_order', id=order.id) }}" type="button"
+                               class="btn btn-danger">
                                 Yes
                             </a>
                         </div>
@@ -70,5 +70,14 @@
         {% endfor %}
         </tbody>
     </table>
+    <script>
+        const url = "http://127.0.0.1:5000/api/orders"
+
+        fetch(url)
+            .then((r) => r.json())
+            .then((data)=>{
+                console.log('DATA', data)
+            })
+    </script>
 {% endblock %}
 

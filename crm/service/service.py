@@ -72,7 +72,7 @@ def delete(model, id):
     """
     item = select_by_id(model, id)
     if item:
-        db.session.delete(item)
+        db.session.delete_item(item)
         db.session.commit()
         return item
     return False
